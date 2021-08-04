@@ -1,0 +1,49 @@
+@font-face {
+    font-family: "Kayoh";
+    src: url(../Fonts/go3v2.ttf);
+    font-weight: normal;
+    font-style: normal;
+  }
+
+.console{
+    background-color: #F5FAFA;
+    min-height: 100px;
+    min-width: 100%;
+    max-height: 200px;
+    border: #FFC107 solid 4px;
+    overflow-y:scroll;
+	overflow-x:hidden;
+
+
+}
+.madera{
+    color: #E3BA6B;
+    background-image: url(../Img/wood-big.jpg);
+    background-position: bottom;
+    background-size: contain;
+
+}
+
+h2{
+    color: #FFC107;
+    font-family: "Kayoh";
+}
+
+header{
+    font-family: "Kayoh";
+    color: #E3BA6B;
+    
+}
+
+
+
+body {
+  background-image: url(../Img/templo-2.jpg);
+  background-size: cover;
+}
+
+nav {
+    background-image: url(../Img/wood-big.jpg);
+    background-position: bottom;
+    background-size: contain;
+}
