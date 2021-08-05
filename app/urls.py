@@ -6,6 +6,8 @@ urlpatterns = [
     path("",views.start),
     path("login",views.login),
     path("logout",views.logout),
-    path("process_money",views.matraca)
+    path("process_money",views.matraca),
+    path("config",views.config),
+    path("reset",views.reset)
 ]
 

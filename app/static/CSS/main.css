@@ -34,11 +34,16 @@ header{
     color: #E3BA6B;
     
 }
+.amarillo{
+    color:#FFC107 ;
+}
 
-
+.verde{
+    color: #7fcc02!important;
+}
 
 body {
-  background-image: url(../Img/templo-2.jpg);
+  background-image: url(../Img/fondoo.png);
   background-size: cover;
 }
 

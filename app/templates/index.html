@@ -38,18 +38,22 @@
         <nav id="prueba" class="navbar navbar-dark bg-dark">
             <div class="container-fluid">
                 <div>   
-                    <button class=" d-inline-block navbar-toggler"  >
+                    <button class=" d-inline-block navbar-toggler"  data-bs-toggle="modal" data-bs-target="#exampleModal">
                         <img  src="{% static 'Img/config2.png' %}" alt="config" width="30" height="30">
                     </button>
                     <p class="d-inline-block">Configuración</p>
                 </div>  
-
+                {% if request.session.modo == "Dificil" %}
+                <h5 class="my-auto  amarillo ">Moviemientos Restantes: <span class="verde">{{request.session.movimientos}}</span></h5> 
+                {%endif%}
                 <div>
                     <img src="{% static 'Img/oro2si.png' %}" alt="oro" width="30" height="30">
                     <h5 class="d-inline-block my-auto">Oro</h5>
                     <h5 class="d-inline-block my-auto">: {{request.session.gold}}</h5>
                 </div>
-
+                {% if request.session.modo == "Dificil" %}
+                <h5 class="my-auto amarillo">Objetivo de Oro: <span class="verde">{{request.session.obj_oro}}</span></h5>
+                {%endif%}
                 <form class="d-flex" method="POST" action="/logout">
                     {% csrf_token %}
                     <p class="d-inline-block my-auto me-3" > Bienvenido! {{request.session.name}}</p>
@@ -61,11 +65,59 @@
     </header>
 
 
+    <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Configuraciones</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/config" method="POST">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <h6>Configura tu modo de juego:</h6>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="modo" id="flexRadioDefault1"
+                                value="Facil" checked>
+                                <label class="form-check-label" for="flexRadioDefault1" >
+                                Facil
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="modo" id="flexRadioDefault2" value="Dificil">
+                                <label class="form-check-label" for="flexRadioDefault2">
+                                  Dificil
+                                </label>
+                            </div>
+                            <div id="solodificil">
+                                <h6 class="mt-4">Preferencias (Solo Modo Dificil):</h6>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Movimientos</span>
+                                    <input id="movimientos" type="number" name="movimientos" class="form-control" placeholder="Número de Movimientos" aria-label="Número de Movimientos" aria-describedby="basic-addon1" required>
+                                </div>
+
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text" id="basic-addon1">Oro</span>
+                                    <input id="obj_oro" type="number" name="obj_oro" class="form-control" placeholder="Objetivo de Oro" aria-label="Objetivo de Oro" aria-describedby="basic-addon1" required>
+                                </div>
+                            </div>  
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-outline-warning">Guardar</button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+
+
     <div class="container mt-5">
 
 
         
-        <div class="row row-cols-4 ">
+        <div class="row row-cols-md-4 row-cols-2">
 
         <div class="col">
             <div class="card p-0 border-0" >
@@ -77,7 +129,7 @@
                     <form action="/process_money" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="tipo" value="farm">
-                        <button type="submit" class="btn btn-outline-warning">Gold</button>
+                        <button type="submit" class="btn btn-warning">Find Gold!</button>
                     </form>
                 </div>
 
@@ -93,7 +145,7 @@
                     <form action="/process_money" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="tipo" value="cave">
-                        <button type="submit" class="btn btn-outline-warning" >Gold</button>
+                        <button type="submit" class="btn btn-warning" >Find Gold!</button>
                     </form>
                 </div>
                 <p class="card-img-bottom madera text-center my-auto">Ganas: 5-10</p>
@@ -108,7 +160,7 @@
                     <form action="/process_money" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="tipo" value="house">
-                        <button type="submit" class="btn btn-outline-warning">Gold</button>
+                        <button type="submit" class="btn btn-warning">Find Gold!</button>
                     </form>
                 </div>
                 <p class="card-img-bottom madera text-center my-auto">Ganas: 2-5</p>
@@ -125,7 +177,7 @@
                     <form action="/process_money" method="post">
                         {% csrf_token %}
                         <input type="hidden" name="tipo" value="casino">
-                        <button type="submit" class="btn btn-outline-warning">Gold</button>
+                        <button type="submit" class="btn btn-warning">Find Gold!</button>
                     </form>
                 </div>
                 <p class=" card-img-bottom madera text-center my-auto">Ganas/Pierdes: 0-50</p>
@@ -142,6 +194,82 @@
             </div>
 
     </div>
+
+     <!-- Victoria y Derrota modo Dificil -->
+        <!-- Button emergencia modal xD -->
+        <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Launch static backdrop modal
+        </button> -->
+        {%if request.session.win == True %}
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Has Ganado</h5>
+                </div>
+                <div class="modal-body">
+                Congratulatios :D
+                </div>
+                <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                <form action="/reset" method="POST">
+                    {%csrf_token%}
+                    <button type="submit" class="btn btn-warning">Volver a Jugar</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        {%elif request.session.lose == True%}
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Has Perdido</h5>
+                </div>
+                <div class="modal-body">
+                Sera a la proxima :c 
+                </div>
+                <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                <form action="/reset" method="POST">
+                    {%csrf_token%}
+                    <button type="submit" class="btn btn-warning">Volver a Jugar</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        {%else%}
+
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Sorry</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                Si ves esto es un error jejej
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <form action="/reset" method="POST">
+                    {%csrf_token%}
+                    <button type="submit" class="btn btn-warning">Reset</button>
+                </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        {%endif%}
 
 
 
@@ -162,7 +290,7 @@
         <!-- <h1 class="h3 mb-3 fw-normal text-muted">Logueate!</h1> -->
     
         <div class="form-floating">
-          <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Nombre">
+          <input type="text" class="form-control" id="floatingInput" name="name" placeholder="Nombre" required>
           <label for="floatingInput">Nombre</label>
         </div>
 
@@ -179,7 +307,43 @@
     integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
     crossorigin="anonymous"
     ></script>
+
+
+    <!-- VICTORIA DERROTA MODAL -->
+
+{% if request.session.win == True or request.session.lose == True %}
+<script>
+    $(window).on('load',function(){
+        $('#staticBackdrop').modal('show');
+    });
+</script>
+{%endif%}
+
 <script>
     $( "#console" ).scrollTop(10000000000000);
+    
+    if ($("#flexRadioDefault2").prop("checked")){
+        $("#solodificil").show();
+    } else {
+        $("#solodificil").hide();
+        $("#movimientos").val("0");
+        $("#obj_oro").val("0");
+    }
+
+    $("#flexRadioDefault2").change(function(){
+        $("#solodificil").slideDown();
+        $("#movimientos").val("");
+        $("#obj_oro").val("");
+    })
+
+    $("#flexRadioDefault1").change(function(){
+        $("#solodificil").slideUp();
+        setTimeout(function()  {
+            $("#movimientos").val("0");
+            $("#obj_oro").val("0");
+        }, 400);
+
+    }) 
+
 </script>
 </html>
