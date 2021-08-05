@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ninja Gold</title>
     {% load static %}		<!-- se agregó esta línea para importar la carpeta static -->
-
+    <link rel="shortcut icon" href="{% static 'Img/ninjagoldd.png' %}">
     {%if "name" in request.session%}
     <link rel="stylesheet" href="{% static 'CSS/main.css' %}">    
     <script src="{% static 'JS/script.js' %}"></script>
